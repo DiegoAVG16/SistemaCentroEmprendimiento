@@ -16,9 +16,12 @@ namespace CentroEmpData.Contrato
         Task<int> Eliminar(int Id);
 
         Task<string> RegistrarHorario(AsesorHorario objeto);
-        Task<List<AsesorHorario>> ListaAsesorHorario();
+        Task<List<AsesorHorario>> ListaAsesorHorario();        
         Task<string> EliminarHorario(int Id);
         Task<List<FechaAtencionDTO>> ListaAsesorHorarioDetalle(int Id);
         Task<List<Cita>> ListaCitasAsignadas(int Id, int IdEstadoCita);
+        Task<List<AsesorHorario>> ListaAsesorHorario(int id);
+
+
     }
 }

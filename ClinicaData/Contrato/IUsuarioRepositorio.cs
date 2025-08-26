@@ -14,5 +14,6 @@ namespace CentroEmpData.Contrato
         Task<string> Guardar(Usuario objeto);
         Task<string> Editar(Usuario objeto);
         Task<int> Eliminar(int Id);
+        Task<int> MigrarHashes();
     }
 }

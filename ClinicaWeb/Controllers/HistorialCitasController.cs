@@ -24,8 +24,10 @@ namespace CentroEmpWeb.Controllers
         {
             ClaimsPrincipal claimuser = HttpContext.User;
             string idUsuario = claimuser.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault()!;
-
+            Console.WriteLine("usuario id: " + idUsuario);
+            //List<Cita> lista = await _repositorioCita.ListaHistorialCitas(int.Parse(idUsuario));
             List<Cita> lista = await _repositorioCita.ListaHistorialCitas(int.Parse(idUsuario));
+
             return StatusCode(StatusCodes.Status200OK, new { data = lista });
         }
     }

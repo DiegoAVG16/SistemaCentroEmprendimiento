@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Data;
 using System.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using CentroEmpData.Seguridad;
 
 namespace CentroEmpData.Implementacion
 {
@@ -27,7 +28,9 @@ namespace CentroEmpData.Implementacion
                 cmd.Parameters.AddWithValue("@Nombre", objeto.Nombre);
                 cmd.Parameters.AddWithValue("@Apellido", objeto.Apellido);
                 cmd.Parameters.AddWithValue("@Correo", objeto.Correo);
-                cmd.Parameters.AddWithValue("@Clave", objeto.Clave);
+                // Hash si no viene hasheada (compatibilidad con existentes)
+                var storedPassword = SecurityUtils.IsHashed(objeto.Clave) ? objeto.Clave : SecurityUtils.HashPassword(objeto.Clave);
+                cmd.Parameters.AddWithValue("@Clave", storedPassword);
                 cmd.Parameters.AddWithValue("@IdRolUsuario", objeto.RolUsuario.IdRolUsuario);
                 cmd.Parameters.Add("@MsgError", SqlDbType.VarChar, 100).Direction = ParameterDirection.Output;
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -80,7 +83,8 @@ namespace CentroEmpData.Implementacion
                 cmd.Parameters.AddWithValue("@Nombre", objeto.Nombre);
                 cmd.Parameters.AddWithValue("@Apellido", objeto.Apellido);
                 cmd.Parameters.AddWithValue("@Correo", objeto.Correo);
-                cmd.Parameters.AddWithValue("@Clave", objeto.Clave);
+                var storedPasswordEdit = SecurityUtils.IsHashed(objeto.Clave) ? objeto.Clave : SecurityUtils.HashPassword(objeto.Clave);
+                cmd.Parameters.AddWithValue("@Clave", storedPasswordEdit);
                 cmd.Parameters.AddWithValue("@IdRolUsuario", objeto.RolUsuario.IdRolUsuario);
                 cmd.Parameters.Add("@MsgError", SqlDbType.VarChar, 100).Direction = ParameterDirection.Output;
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -144,7 +148,8 @@ namespace CentroEmpData.Implementacion
                 await conexion.OpenAsync();
                 SqlCommand cmd = new SqlCommand("sp_loginUsuario", conexion);
                 cmd.Parameters.AddWithValue("@DocumentoIdentidad", DocumentoIdentidad);
-                cmd.Parameters.AddWithValue("@Clave", Clave);
+                // El SP debe validar por aplicación: recuperamos hash y verificamos aquí
+                cmd.Parameters.AddWithValue("@Clave", "__app_verifica_hash__");
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = await cmd.ExecuteReaderAsync())
@@ -158,6 +163,7 @@ namespace CentroEmpData.Implementacion
                             Nombre = dr["Nombre"].ToString()!,
                             Apellido = dr["Apellido"].ToString()!,
                             Correo = dr["Correo"].ToString()!,
+                            Clave = dr["Clave"].ToString()!,
                             RolUsuario = new RolUsuario
                             {
                                 Nombre = dr["NombreRol"].ToString()!,
@@ -166,7 +172,44 @@ namespace CentroEmpData.Implementacion
                     }
                 }
             }
+            // Verificar hash o texto plano; si coincide en texto plano, migrar a hash
+            if (objeto != null && !string.IsNullOrEmpty(objeto.Clave))
+            {
+                bool ok = false;
+                if (SecurityUtils.IsHashed(objeto.Clave))
+                {
+                    ok = SecurityUtils.VerifyPassword(Clave, objeto.Clave);
+                }
+                else
+                {
+                    ok = (Clave == objeto.Clave);
+                    if (ok)
+                    {
+                        // Migración automática a hash
+                        objeto.Clave = SecurityUtils.HashPassword(Clave);
+                        await Editar(objeto);
+                    }
+                }
+                if (!ok) return null!;
+                objeto.Clave = string.Empty;
+            }
             return objeto;
+        }
+
+        public async Task<int> MigrarHashes()
+        {
+            int migrados = 0;
+            var usuarios = await Lista(0);
+            foreach (var u in usuarios)
+            {
+                if (!SecurityUtils.IsHashed(u.Clave))
+                {
+                    u.Clave = SecurityUtils.HashPassword(u.Clave);
+                    var r = await Editar(u);
+                    if (r == "") migrados++;
+                }
+            }
+            return migrados;
         }
     }
 }

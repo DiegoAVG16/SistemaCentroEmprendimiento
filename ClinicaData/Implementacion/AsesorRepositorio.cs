@@ -1,4 +1,6 @@
 ﻿
+
+
 using System.Data.SqlClient;
 using System.Data;
 using Microsoft.Extensions.Options;
@@ -6,7 +8,9 @@ using System.Xml.Linq;
 using CentroEmpData.Configuracion;
 using CentroEmpEntidades.DTO;
 using CentroEmpEntidades;
+using System.Numerics;
 using CentroEmpData.Contrato;
+using System;
 
 namespace CentroEmpData.Implementacion
 {
@@ -23,8 +27,8 @@ namespace CentroEmpData.Implementacion
             using (var conexion = new SqlConnection(con.CadenaSQL))
             {
                 await conexion.OpenAsync();
-                SqlCommand cmd = new SqlCommand("sp_editarDoctor", conexion);
-                cmd.Parameters.AddWithValue("@IdDoctor", objeto.IdAsesor);
+                SqlCommand cmd = new SqlCommand("sp_editarAsesor", conexion);
+                cmd.Parameters.AddWithValue("@IdAsesor", objeto.IdAsesor);
                 cmd.Parameters.AddWithValue("@NumeroDocumentoIdentidad", objeto.NumeroDocumentoIdentidad);
                 cmd.Parameters.AddWithValue("@Nombres", objeto.Nombres);
                 cmd.Parameters.AddWithValue("@Apellidos", objeto.Apellidos);
@@ -40,7 +44,7 @@ namespace CentroEmpData.Implementacion
                 }
                 catch
                 {
-                    respuesta = "Error al editar el doctor";
+                    respuesta = "Error al editar el asesor";
                 }
             }
             return respuesta;
@@ -117,7 +121,7 @@ namespace CentroEmpData.Implementacion
                 }
                 catch
                 {
-                    respuesta = "Error al editar el Asesor";
+                    respuesta = "Error al editar el asesor";
                 }
             }
             return respuesta;
@@ -157,17 +161,7 @@ namespace CentroEmpData.Implementacion
             return lista;
         }
 
-        public Task<List<AsesorHorario>> ListaAsesorHorario()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<FechaAtencionDTO>> ListaAsesorHorarioDetalle(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Cita>> ListaCitasAsignadas(int Id,int IdEstadoCita)
+        public async Task<List<Cita>> ListaCitasAsignadas(int Id, int IdEstadoCita)
         {
             List<Cita> lista = new List<Cita>();
 
@@ -177,6 +171,8 @@ namespace CentroEmpData.Implementacion
                 SqlCommand cmd = new SqlCommand("sp_ListaCitasAsignadas", conexion);
                 cmd.Parameters.AddWithValue("@IdAsesor", Id);
                 cmd.Parameters.AddWithValue("@IdEstadoCita", IdEstadoCita);
+               // cmd.Parameters.AddWithValue("@IdAsesor", 3);
+                //cmd.Parameters.AddWithValue("@IdEstadoCita", 2);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = await cmd.ExecuteReaderAsync())
@@ -205,7 +201,7 @@ namespace CentroEmpData.Implementacion
             return lista;
         }
 
-        public async Task<List<AsesorHorario>> ListaAsesoHorario()
+        public async Task<List<AsesorHorario>> ListaAsesorHorario()
         {
             List<AsesorHorario> lista = new List<AsesorHorario>();
 
@@ -241,15 +237,24 @@ namespace CentroEmpData.Implementacion
             return lista;
         }
 
-        public async Task<List<FechaAtencionDTO>> ListaAsesoHorarioDetalle(int Id)
+        public async Task<List<FechaAtencionDTO>> ListaAsesorHorarioDetalle(int Id)
+
         {
+            Console.WriteLine("ID recibido: " + Id);
+
+           
+
             List<FechaAtencionDTO> lista = new List<FechaAtencionDTO>();
+            
 
             using (var conexion = new SqlConnection(con.CadenaSQL))
             {
+                
                 await conexion.OpenAsync();
-                SqlCommand cmd = new SqlCommand("sp_listaAsesorHorarioDetalle", conexion);
-                cmd.Parameters.AddWithValue("@IdAsesor", Id);
+                SqlCommand cmd = new SqlCommand("sp_listaAsesorHorarioDetalle", conexion);// sp_listaAsesorHorarioDetalle
+
+
+                cmd.Parameters.AddWithValue("@IdAsesor",Id); //@IdAsesor
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = await cmd.ExecuteXmlReaderAsync())
@@ -274,6 +279,7 @@ namespace CentroEmpData.Implementacion
                     }
                 }
             }
+            
             return lista;
         }
 
@@ -290,7 +296,7 @@ namespace CentroEmpData.Implementacion
                 cmd.Parameters.AddWithValue("@HoraFinAM", objeto.HoraFinAM);
                 cmd.Parameters.AddWithValue("@HoraInicioPM", objeto.HoraInicioPM);
                 cmd.Parameters.AddWithValue("@HoraFinPM", objeto.HoraFinPM);
-                cmd.Parameters.AddWithValue("@Fechas", objeto.Asesor.IdAsesor);
+                cmd.Parameters.AddWithValue("@Fechas", objeto.AsesorHorarioDetalle.Fecha);
                 cmd.Parameters.Add("@msgError", SqlDbType.VarChar, 100).Direction = ParameterDirection.Output;
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -299,12 +305,22 @@ namespace CentroEmpData.Implementacion
                     await cmd.ExecuteNonQueryAsync();
                     respuesta = Convert.ToString(cmd.Parameters["@msgError"].Value)!;
                 }
-                catch
+                catch (SqlException ex)
                 {
-                    respuesta = "Error al registrar el horario";
+                    respuesta = "Error al registrar el horario: " + ex.Message;
+                }
+                catch (Exception ex)
+                {
+                    respuesta = "Error al registrar el horario" + ex.Message;
                 }
             }
             return respuesta;
         }
+
+        Task<List<AsesorHorario>> IAsesorRepositorio.ListaAsesorHorario(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+

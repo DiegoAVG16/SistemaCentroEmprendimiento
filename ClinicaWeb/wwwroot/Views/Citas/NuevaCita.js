@@ -1,22 +1,22 @@
 ﻿let Especialidades = [];
-let Doctores = [];
-let DoctorHorario = [];
+let Asesores = [];
+let AsesorHorario = [];
 const modal = "mdData";
 let IdEspecialidadSeleccionada = 0;
-let IdDoctorSeleccionado = 0;
+let IdAsesorSeleccionado = 0;
 let IdHoraSeleccionado = 0;
 let EspecialidadSeleccionada = "";
-let DoctorSeleccionado = "";
+let AsesorSeleccionado = "";
 let HoraSeleccionado = "";
 
-const IndexTabs = [0,1,2]
+const IndexTabs = [0, 1, 2]
 
 
 document.addEventListener("DOMContentLoaded", function (event) {
     $.datepicker.setDefaults($.datepicker.regional['es']);
     $("#tabs").tabs();
     $("#txtBuscarEspecialidad").trigger("focus");
-    
+
 
 
     $("#tab-especialidad").LoadingOverlay("show");
@@ -41,10 +41,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
         });
     })
 
- 
+
     $("#tabs").tabs("option", "disabled", [1, 2]);
     $("#btnSiguiente").prop("disabled", true);
-    
+
 });
 
 $("#txtBuscarEspecialidad").on("input", function () {
@@ -53,10 +53,10 @@ $("#txtBuscarEspecialidad").on("input", function () {
     BuscarEspecialidad($(this).val());
     $("#btnSiguiente").prop("disabled", true);
 });
-$("#txtBuscarDoctor").on("input", function () {
+$("#txtBuscarAsesor").on("input", function () {
 
-    IdDoctorSeleccionado = 0;
-    BuscarDoctor($(this).val());
+    IdAsesorSeleccionado = 0;
+    BuscarAsesor($(this).val());
     $("#btnSiguiente").prop("disabled", true);
 });
 
@@ -70,12 +70,12 @@ $(document).on("click", "div.card-especialidad", function () {
     $("#btnSiguiente").prop("disabled", false);
 });
 
-$(document).on("click", "div.card-doctor", function () {
+$(document).on("click", "div.card-asesor", function () {
 
-    $(".card-doctor").removeClass("text-white bg-primary");
+    $(".card-asesor").removeClass("text-white bg-primary");
     $(this).addClass("text-white bg-primary");
-    IdDoctorSeleccionado = $(this).data("id");
-    DoctorSeleccionado = $(this).data("text");
+    IdAsesorSeleccionado = $(this).data("id");
+    AsesorSeleccionado = $(this).data("text");
     $("#btnSiguiente").prop("disabled", false);
 });
 
@@ -109,16 +109,16 @@ function BuscarEspecialidad(valor) {
     })
 }
 
-function BuscarDoctor(valor) {
-    $("#contenedor-doctores").html("")
-    const resultadosFiltrados = Doctores.filter(element => (element.nombres + element.apellidos).toLowerCase().includes(valor.toLowerCase()));
+function BuscarAsesor(valor) {
+    $("#contenedor-asesores").html("")
+    const resultadosFiltrados = Asesores.filter(element => (element.nombres + element.apellidos).toLowerCase().includes(valor.toLowerCase()));
     resultadosFiltrados.forEach(function (item) {
-        const acronimo = item.genero == "F" ? "Dra.":"Dr."
-        $("#contenedor-doctores").append(
+        const acronimo = item.genero == "F" ? "Ing." : "Ing."
+        $("#contenedor-asesores").append(
             `<div class="col mb-4">
-                <div class="card h-100 card-doctor" style="cursor: pointer" data-id="${item.idDoctor}" data-text="${acronimo} ${item.nombres} ${item.apellidos}">
+                <div class="card h-100 card-asesor" style="cursor: pointer" data-id="${item.idAsesor}" data-text="${acronimo} ${item.nombres} ${item.apellidos}">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="fa-solid fa-user-doctor"></i> ${acronimo} ${item.nombres} ${item.apellidos}</h5>
+                        <h5 class="card-title"><i class="fa-solid fa-user-asesor"></i> ${acronimo} ${item.nombres} ${item.apellidos}</h5>
                     </div>
                 </div>
             </div>`
@@ -140,25 +140,25 @@ $("#btnSiguiente").on("click", function () {
         $("#btnSiguiente").prop("disabled", true);
 
         if (habilitarIndex == 1) {
-            $("#txtBuscarDoctor").val("");
-            $("#txtBuscarDoctor").trigger("focus");
-            ObtenerDoctores()
+            $("#txtBuscarAsesor").val("");
+            $("#txtBuscarAsesor").trigger("focus");
+            ObtenerAsesores()
         } else if (habilitarIndex == 2) {
-            
-            $("#txtFechaCita").val("");
-            ObtenerDoctoreHorarioDetalle()
 
-           
+            $("#txtFechaCita").val("");
+            ObtenerAsesoresHorarioDetalle()
+
+
         }
     }
     if (indexTab == 2) {
         $("#txtEspecialidad").val(EspecialidadSeleccionada);
-        $("#txtDoctor").val(DoctorSeleccionado);
+        $("#txtAsesor").val(AsesorSeleccionado);
         $("#txtFechadeCita").val($("#txtFechaCita").val());
         $("#txtHoraCita").val(HoraSeleccionado);
         $("#mdData").modal("show")
     }
-    
+
 });
 
 $("#btnRegresar").on("click", function () {
@@ -178,30 +178,30 @@ $("#btnRegresar").on("click", function () {
         $(".card-especialidad").removeClass("text-white bg-primary");
         BuscarEspecialidad("");
     } else if (habilitarIndex == 1) {
-        $("#txtBuscarDoctor").val("");
-        $("#txtBuscarDoctor").trigger("focus");
-        $(".card-doctor").removeClass("text-white bg-primary");
-        BuscarDoctor("");
+        $("#txtBuscarAsesor").val("");
+        $("#txtBuscarAsesor").trigger("focus");
+        $(".card-asesor").removeClass("text-white bg-primary");
+        BuscarAsesor("");
     }
 });
 
 
-function ObtenerDoctores() {
-    $("#tab-doctor").LoadingOverlay("show");
+function ObtenerAsesores() {
+    $("#tab-asesor").LoadingOverlay("show");
 
-    fetch(`/Doctor/Lista`, {
+    fetch(`/Asesor/Lista`, {
         method: "GET",
         headers: { 'Content-Type': 'application/json;charset=utf-8' }
     }).then(response => {
         return response.ok ? response.json() : Promise.reject(response);
     }).then(responseJson => {
         if (responseJson.data.length > 0) {
-            Doctores = responseJson.data.filter(element => element.especialidad.idEspecialidad == IdEspecialidadSeleccionada);
-            BuscarDoctor("")
+            Asesores = responseJson.data.filter(element => element.especialidad.idEspecialidad == IdEspecialidadSeleccionada);
+            BuscarAsesor("")
         }
-        $("#tab-doctor").LoadingOverlay("hide");
+        $("#tab-asesor").LoadingOverlay("hide");
     }).catch((error) => {
-        $("#tab-doctor").LoadingOverlay("hide");
+        $("#tab-asesor").LoadingOverlay("hide");
         console.log(error)
         Swal.fire({
             title: "Error!",
@@ -212,22 +212,23 @@ function ObtenerDoctores() {
 
 }
 
-function ObtenerDoctoreHorarioDetalle() {
+function ObtenerAsesoresHorarioDetalle() {
     $("#txtFechaCita").datepicker("destroy");
     $("#tab-horario").LoadingOverlay("show");
     $("#contenedor-am").html("");
     $("#contenedor-pm").html("");
 
-    fetch(`/Citas/ListaDoctorHorarioDetalle?Id=${IdDoctorSeleccionado}`, {
+    
+    fetch(`/Citas/ListaAsesorHorarioDetalle?Id=${IdAsesorSeleccionado}`, {
         method: "GET",
         headers: { 'Content-Type': 'application/json;charset=utf-8' }
-    }).then(response => {
+    }).then(response => {               
         return response.ok ? response.json() : Promise.reject(response);
     }).then(responseJson => {
-      
+
         if (responseJson.data.length > 0) {
             const arraySoloFechas = responseJson.data.map(item => item.fecha);
-            DoctorHorario = responseJson.data
+            AsesorHorario = responseJson.data
 
             $("#txtFechaCita").datepicker({
                 defaultDate: "",
@@ -246,15 +247,15 @@ function ObtenerDoctoreHorarioDetalle() {
                     $("#contenedor-pm").html("");
 
                     const selectedDate = $(this).val();
-                    
-                    const Fecha = DoctorHorario.find(element => element.fecha == selectedDate);
-  
+
+                    const Fecha = AsesorHorario.find(element => element.fecha == selectedDate);
+
                     const HorarioAM = Fecha.horarioDTO.filter(element => element.turno == "AM");
                     const HorarioPM = Fecha.horarioDTO.filter(element => element.turno == "PM");
                     HorarioAM.forEach(function (item) {
                         $("#contenedor-am").append(
                             `<div class="col mb-4" >
-                                <div class="text-center card-hora" style="cursor: pointer;border-radius: 0.375rem;border: 1px solid #ccc !important;" data-id="${item.idDoctorHorarioDetalle}" data-text="${item.turnoHora}">
+                                <div class="text-center card-hora" style="cursor: pointer;border-radius: 0.375rem;border: 1px solid #ccc !important;" data-id="${item.idAsesorHorarioDetalle}" data-text="${item.turnoHora}">
                                     <h6 class="card-title mt-2">${item.turnoHora}</h6>
                                 </div>
                              </div>`
@@ -263,7 +264,7 @@ function ObtenerDoctoreHorarioDetalle() {
                     HorarioPM.forEach(function (item) {
                         $("#contenedor-pm").append(
                             `<div class="col mb-4" >
-                                <div class="text-center card-hora" style="cursor: pointer;border-radius: 0.375rem;border: 1px solid #ccc !important;" data-id="${item.idDoctorHorarioDetalle}" data-text="${item.turnoHora}">
+                                <div class="text-center card-hora" style="cursor: pointer;border-radius: 0.375rem;border: 1px solid #ccc !important;" data-id="${item.idAsesorHorarioDetalle}" data-text="${item.turnoHora}">
                                     <h6 class="card-title mt-2">${item.turnoHora}</h6>
                                 </div>
                              </div>`
@@ -272,7 +273,7 @@ function ObtenerDoctoreHorarioDetalle() {
                 }
             });
 
-          
+
         } else {
             Swal.fire({
                 text: "No hay horarios disponibles.",
@@ -300,10 +301,10 @@ $("#btnAgendar").on("click", function () {
         });
         return
     }
-    
+
     let objeto = {
-        DoctorHorarioDetalle: {
-            IdDoctorHorarioDetalle: IdHoraSeleccionado
+        AsesorHorarioDetalle: {
+            IdAsesorHorarioDetalle: IdHoraSeleccionado
         },
         EstadoCita: {
             IdEstadoCita: 1
@@ -318,7 +319,7 @@ $("#btnAgendar").on("click", function () {
     }).then(response => {
         return response.ok ? response.json() : Promise.reject(response);
     }).then(responseJson => {
-        
+
         if (responseJson.data == "") {
             Swal.fire({
                 title: "Felicidades!",

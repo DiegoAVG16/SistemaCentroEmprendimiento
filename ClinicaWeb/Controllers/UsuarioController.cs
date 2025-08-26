@@ -46,5 +46,13 @@ namespace CentroEmpWeb.Controllers
             int respuesta = await _repositorio.Eliminar(Id);
             return StatusCode(StatusCodes.Status200OK, new { data = respuesta });
         }
+
+        [Authorize(Roles = "Administrador")]
+        [HttpPost]
+        public async Task<IActionResult> MigrarHashes()
+        {
+            int migrados = await _repositorio.MigrarHashes();
+            return StatusCode(StatusCodes.Status200OK, new { data = migrados });
+        }
     }
 }

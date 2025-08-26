@@ -6,19 +6,20 @@
     <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
     <link href="~/lib/select2/css/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 }
-<h2 class="mt-4 mb-4">Usuarios</h2>
+<h2 class="mt-4 mb-4">Pantalla de Administrador</h2>
 
 <div class="row">
     <div class="col-sm-12">
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fas fa-chart-bar me-1"></i>
-                Lista de usuarios
+                Lista de administradores
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-3">
-                        <button class="btn btn-outline-success" id="btnNuevo">Nuevo Usuario</button>
+                        <button class="btn btn-outline-success" id="btnNuevo">Nuevo Admin</button>
+                        <button class="btn btn-outline-primary ms-2" id="btnMigrarHashes">Migrar hashes</button>
                     </div>
                 </div>
                 <hr />
@@ -40,7 +41,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Usuario</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Administrador</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -84,5 +85,14 @@
     <script src="~/lib/datatables2/js/datatables.js"></script>
     <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/views/usuario/usuario.js"></script>
+    <script>
+        // feedback simple para migración (en caso de no cargar el JS principal todavía)
+        document.getElementById('btnMigrarHashes')?.addEventListener('click', function () {
+            fetch('/Usuario/MigrarHashes', { method: 'POST' })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(j => alert('Usuarios migrados: ' + j.data))
+                .catch(() => alert('No se pudo migrar'));
+        });
+    </script>
 
 }

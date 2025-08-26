@@ -73,7 +73,7 @@ namespace CentroEmpData.Implementacion
                 await conexion.OpenAsync();
                 SqlCommand cmd = new SqlCommand("sp_guardarCita", conexion);
                 cmd.Parameters.AddWithValue("@IdUsuario", objeto.Usuario.IdUsuario);
-                cmd.Parameters.AddWithValue("@IdAsesorHorarioDetalle", objeto.DoctorHorarioDetalle.IdAsesorHorarioDetalle);
+                cmd.Parameters.AddWithValue("@IdAsesorHorarioDetalle", objeto.AsesorHorarioDetalle.IdAsesorHorarioDetalle);
                 cmd.Parameters.AddWithValue("@IdEstadoCita", objeto.EstadoCita.IdEstadoCita);
                 cmd.Parameters.AddWithValue("@FechaCita", objeto.FechaCita);
                 cmd.Parameters.Add("@msgError", SqlDbType.VarChar, 100).Direction = ParameterDirection.Output;
@@ -136,8 +136,8 @@ namespace CentroEmpData.Implementacion
             using (var conexion = new SqlConnection(con.CadenaSQL))
             {
                 await conexion.OpenAsync();
-                SqlCommand cmd = new SqlCommand("sp_ListaHistorialCitas", conexion);
-                cmd.Parameters.AddWithValue("@IdUsuario", IdUsuario);
+                SqlCommand cmd = new SqlCommand("sp_ListaHistorialCitas", conexion); //sp_ListaHistorialCitas
+                cmd.Parameters.AddWithValue("@IdUsuario",IdUsuario);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 using (var dr = await cmd.ExecuteReaderAsync())

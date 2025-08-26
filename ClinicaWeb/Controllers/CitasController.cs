@@ -16,6 +16,7 @@ namespace CentroEmpWeb.Controllers
             _repositorio = repositorio;
             _repositorioCita = repositorioCita;
         }
+
         [Authorize(Roles = "Emprendedor")]
         public IActionResult Index()
         {
@@ -27,14 +28,14 @@ namespace CentroEmpWeb.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Asesor")]
+        [Authorize(Roles = "asesor")]
         public IActionResult CitasAsignadas()
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListaDoctorHorarioDetalle(int Id)
+        public async Task<IActionResult> ListaAsesorHorarioDetalle(int Id)
         {
             List<FechaAtencionDTO> lista = await _repositorio.ListaAsesorHorarioDetalle(Id);
             return StatusCode(StatusCodes.Status200OK, new { data = lista });

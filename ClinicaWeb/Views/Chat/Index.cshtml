@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "ChatGPT MVC Demo";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: SansSerif;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('/css/bgproy.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .contenido {
+            width: 60%;
+            padding: 60px;
+            background-color: rgba(0, 0, 0, 0.5); /* opcional: fondo semitransparente para mejor legibilidad */
+            border-radius: 10px;
+            z-index: 1;
+            position: relative;
+        }
+
+        form input {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenido">
+        <h2>Chat IA</h2>
+
+        <h5>Elegir opción:</h5>
+        <h6>1 - ¿Cómo crear una cita?</h6>
+        <h6>2 - ¿Ver Historial de mis citas?</h6>
+
+        <form method="post">
+            <label for="prompt">Tu pregunta:</label><br />
+            <input type="text" name="prompt" style="width: 300px;" /><br /><br />
+            <button class="btn-outline-success" type="submit">Enviar</button>
+        </form>
+
+        @if (ViewBag.Response != null)
+        {
+            <hr />
+            <h4>Respuesta:</h4>
+            <p>@ViewBag.Response</p>
+        }
+    </div>
+</body>
+</html>
+
+
+
+

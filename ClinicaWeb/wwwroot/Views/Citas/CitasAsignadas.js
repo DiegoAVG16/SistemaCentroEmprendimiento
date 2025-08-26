@@ -1,6 +1,6 @@
 ﻿let tablaData;
 let idCitaSeleccionada = 0;
-const controlador = "Doctor";
+const controlador = "Asesor";
 const modal = "mdData";
 
 document.addEventListener("DOMContentLoaded", function (event) {
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             { title: "Fecha Cita", "data": "fechaCita", width: "150px" },
             { title: "Hora Cita", "data": "horaCita", width: "150px" },
             {
-                title: "Paciente", "data": "usuario", render: function (data, type, row) {
+                title: "Emprendedor", "data": "usuario", render: function (data, type, row) {
                     return `${data.nombre} ${data.apellido}`
                 }
             },

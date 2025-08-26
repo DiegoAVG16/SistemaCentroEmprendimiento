@@ -1,4 +1,5 @@
-﻿using CentroEmpData.Contrato;
+﻿using CentroEmpData;
+using CentroEmpData.Contrato;
 using CentroEmpEntidades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,3 +42,4 @@ namespace CentroEmpWeb.Controllers
 
     }
 }
+

@@ -21,9 +21,10 @@ namespace CentroEmpWeb.Controllers
             if (claimuser.Identity!.IsAuthenticated)
             {
                 string rol = claimuser.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).SingleOrDefault()!;
-                if (rol == "Administrador") return RedirectToAction("Index", "Home");
+                if (rol == "Administrador") return RedirectToAction("Index","Home","Citas");
+
                 if (rol == "Emprendedor") return RedirectToAction("Index", "Citas");
-                if (rol == "Asesor") return RedirectToAction("Index", "Home");
+                if (rol == "asesor") return RedirectToAction("CitasAsignadas", "Citas");
             }
             return View();
         }
@@ -64,8 +65,9 @@ namespace CentroEmpWeb.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), properties);
 
             string rol = usuario_encontrado.RolUsuario.Nombre;
-            if (rol == "Paciente") return RedirectToAction("Index", "Citas");
-            if (rol == "Doctor") return RedirectToAction("CitasAsignadas", "Citas");
+            Console.WriteLine(usuario_encontrado.RolUsuario.IdRolUsuario);
+            if (rol == "Emprendedor") return RedirectToAction("Index", "Citas");
+            if (rol == "asesor") return RedirectToAction("CitasAsignadas", "Citas");
 
             return RedirectToAction("Index", "Home");
         }

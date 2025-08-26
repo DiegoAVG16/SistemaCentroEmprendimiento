@@ -1,10 +1,10 @@
 ﻿let tablaData;
 let idEditar = 0;
-const controlador = "Doctor";
+const controlador = "Asesor";
 const modal = "mdData";
-const preguntaEliminar = "Desea eliminar al doctor";
-const confirmaEliminar = "El doctor fue eliminado.";
-const confirmaRegistro = "Doctor registrado!";
+const preguntaEliminar = "Desea eliminar al asesor";
+const confirmaEliminar = "El asesor fue eliminado.";
+const confirmaRegistro = "Asesor registrado!";
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             },
             { title: "Fecha Creacion", "data": "fechaCreacion" },
             {
-                title: "", "data": "idDoctor", width: "100px", render: function (data, type, row) {
+                title: "", "data": "idAsesor", width: "100px", render: function (data, type, row) {
                     return `<div class="btn-group dropstart">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             Acción
@@ -87,7 +87,7 @@ $("#tbData tbody").on("click", ".btn-editar", function () {
     var filaSeleccionada = $(this).closest('tr');
     var data = tablaData.row(filaSeleccionada).data();
 
-    idEditar = data.idDoctor;
+    idEditar = data.idAsesor;
     $("#txtNroDocumento").val(data.numeroDocumentoIdentidad);
     $("#txtNombres").val(data.nombres);
     $("#txtApellidos").val(data.apellidos);
@@ -122,7 +122,7 @@ $("#tbData tbody").on("click", ".btn-eliminar", function () {
     }).then((result) => {
         if (result.isConfirmed) {
 
-            fetch(`/${controlador}/Eliminar?Id=${data.idDoctor}`, {
+            fetch(`/${controlador}/Eliminar?Id=${data.idAsesor}`, {
                 method: "DELETE",
                 headers: { 'Content-Type': 'application/json;charset=utf-8' }
             }).then(response => {
@@ -171,7 +171,7 @@ $("#btnGuardar").on("click", function () {
     }
     
     let objeto = {
-        IdDoctor: idEditar,
+        IdAsesor: idEditar,
         NumeroDocumentoIdentidad: $("#txtNroDocumento").val().trim(),
         Nombres: $("#txtNombres").val().trim(),
         Apellidos: $("#txtApellidos").val().trim(),

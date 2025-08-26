@@ -10,7 +10,7 @@ namespace CentroEmpEntidades
     {
         public int IdCita { get; set; }
         public Usuario Usuario { get; set; } = null!;
-        public AsesorHorarioDetalle DoctorHorarioDetalle { get; set; } = null!;
+        public AsesorHorarioDetalle AsesorHorarioDetalle { get; set; } = null!;
         public EstadoCita EstadoCita { get; set; } = null!;
         public string FechaCita { get; set; } = null!;
         public string FechaCreacion { get; set; } = null!;

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Clinica - Net8</title>
+    <title>Centro Emprendimiento - Net8</title>
     <link href="~/css/styles.css" rel="stylesheet" />
     @RenderSection("Estilos", required: false)
     <script src="~/lib/fontawesome/all.js"></script>
@@ -15,7 +15,7 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="#">Clinica</a>
+        
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -40,13 +40,13 @@
                                 Dashboard
                             </a>
                         }
-                        
+
                         <div class="sb-sidenav-menu-heading">Gestion</div>
                         @if (User.IsInRole("Administrador"))
                         {
                             <a class="nav-link" asp-controller="Usuario" asp-action="Index">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Usuario
+                                Administrador
                             </a>
                             <a class="nav-link" asp-controller="Especialidad" asp-action="Index">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -54,12 +54,13 @@
                             </a>
                             <a class="nav-link" asp-controller="Asesor" asp-action="Index">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Doctor
+                                Asesor
                             </a>
                             <a class="nav-link" asp-controller="AsesorHorario" asp-action="Index">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Doctor Horario
+                                Asesor Horario
                             </a>
+
                         }
                         @if (User.IsInRole("Emprendedor"))
                         {
@@ -71,9 +72,13 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Historial Citas
                             </a>
+                            <a class="nav-link" asp-controller="Chat" asp-action="Index">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Ayúdame IA
+                            </a>
                         }
 
-                        @if (User.IsInRole("Asesor"))
+                        @if (User.IsInRole("asesor"))
                         {
                             <a class="nav-link" asp-controller="Citas" asp-action="CitasAsignadas">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
@@ -81,12 +86,15 @@
                             </a>
                         }
 
-                        
+
                     </div>
                 </div>
+
+                
+
                 <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Start Bootstrap
+                    <img src="~/css/ciemi.jpeg" alt="Logo CIEMI" class="img-fluid" style="max-width: 200px;" />
+                    
                 </div>
             </nav>
         </div>
@@ -99,7 +107,7 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div class="text-muted">Copyright &copy; Your Website 2025</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;

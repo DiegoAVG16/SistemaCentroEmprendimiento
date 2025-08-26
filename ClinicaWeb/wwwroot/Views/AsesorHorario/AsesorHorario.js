@@ -1,17 +1,17 @@
 ﻿let tablaData;
 let idEditar = 0;
-const controlador = "DoctorHorario";
+const controlador = "AsesorHorario";
 const modal = "mdData";
 const preguntaEliminar = "Desea eliminar el horario";
 const confirmaEliminar = "El horario fue eliminado.";
 const confirmaRegistro = "Horario registrado!";
 const meses = [{ value: 1, text: "Enero" }, { value: 2, text: "Febrero" }, { value: 3, text: "Marzo" }, { value: 4, text: "Abril" },
-    { value: 5, text: "Mayo" }, { value: 6, text: "Junio" }, { value: 7, text: "Julio" }, { value: 8, text: "Agosto" }, { value: 9, text: "Septiembre" }
+{ value: 5, text: "Mayo" }, { value: 6, text: "Junio" }, { value: 7, text: "Julio" }, { value: 8, text: "Agosto" }, { value: 9, text: "Septiembre" }
     , { value: 10, text: "Octubre" }, { value: 11, text: "Noviembre" }, { value: 12, text: "Diciembre" }]
 const mesActual = new Date().getMonth() + 1;
 
 document.addEventListener("DOMContentLoaded", function (event) {
-   
+
     tablaData = $('#tbData').DataTable({
         responsive: true,
         scrollX: true,
@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
         },
         "columns": [
             {
-                title: "Nro Documento", "data": "doctor", width: "150px",render: function (data, type, row) {
+                title: "Nro Documento", "data": "asesor", width: "150px", render: function (data, type, row) {
                     return data.numeroDocumentoIdentidad
                 }
             },
             {
-                title: "Doctor", "data": "doctor", render: function (data, type, row) {
+                title: "Asesor", "data": "asesor", render: function (data, type, row) {
                     return `${data.nombres} ${data.apellidos}`
                 }
             },
@@ -41,10 +41,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
             { title: "Hora Fin AM", "data": "horaFinAM" },
             { title: "Hora Inicio PM", "data": "horaInicioPM" },
             { title: "Hora Fin PM", "data": "horaFinPM" },
-            
+
             { title: "Fecha Creacion", "data": "fechaCreacion" },
             {
-                title: "", "data": "idDoctor", width: "100px", render: function (data, type, row) {
+                title: "", "data": "idAsesor", width: "100px", render: function (data, type, row) {
                     return `<button type="button" class="btn btn-sm btn-outline-danger me-1 btn-eliminar"><i class="fas fa-trash"></i></button>`
                 }
             }
@@ -103,20 +103,20 @@ document.addEventListener("DOMContentLoaded", function (event) {
         zindex: 9999999,
         change: MostrarHoraFinPM
     });
-   
 
-    fetch(`/Doctor/Lista`, {
+
+    fetch(`/Asesor/Lista`, {
         method: "GET",
         headers: { 'Content-Type': 'application/json;charset=utf-8' }
     }).then(response => {
         return response.ok ? response.json() : Promise.reject(response);
     }).then(responseJson => {
         if (responseJson.data.length > 0) {
-            $("#cboDoctor").append($("<option>").val("").text(""));
+            $("#cboAsesor").append($("<option>").val("").text(""));
             responseJson.data.forEach((item) => {
-                $("#cboDoctor").append($("<option>").val(item.idDoctor).text(`${item.numeroDocumentoIdentidad} - ${item.nombres} ${item.apellidos}`));
+                $("#cboAsesor").append($("<option>").val(item.idAsesor).text(`${item.numeroDocumentoIdentidad} - ${item.nombres} ${item.apellidos}`));
             });
-            $('#cboDoctor').select2({
+            $('#cboAsesor').select2({
                 theme: 'bootstrap-5',
                 dropdownParent: $('#mdData'),
                 placeholder: "Seleccionar"
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     const mesesActivos = meses.filter((m) => m.value >= mesActual);
     $("#cboMesAtencion").append($("<option>").val("").text(""));
-    mesesActivos.forEach( (m) =>{
+    mesesActivos.forEach((m) => {
         $("#cboMesAtencion").append($("<option>").val(m.value).text(m.text));
     })
     $('#cboMesAtencion').select2({
@@ -144,13 +144,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
 });
 
 function MostrarHoraFinAM() {
-  
+
     const Hora = moment($("#txtHoraInicioAM").val(), "HH:mm");
     Hora.add(moment.duration("00:30"))
     $('#txtHoraFinAM').val('');
     $('#txtHoraFinAM').timepicker('option', 'minTime', Hora.format('HH:mm'))
     $('#txtHoraFinAM').timepicker('option', 'startTime', Hora.format('HH:mm'))
-  
+
 }
 function MostrarHoraFinPM() {
     const Hora = moment($("#txtHoraInicioPM").val(), ['h:mm A']);
@@ -164,7 +164,7 @@ $("#tbData tbody").on("click", ".btn-editar", function () {
     var filaSeleccionada = $(this).closest('tr');
     var data = tablaData.row(filaSeleccionada).data();
 
-    idEditar = data.idDoctor;
+    idEditar = data.idAsesor;
     $("#txtNroDocumento").val(data.numeroDocumentoIdentidad);
     $("#txtNombres").val(data.nombres);
     $("#txtApellidos").val(data.apellidos);
@@ -202,7 +202,7 @@ $("#tbData tbody").on("click", ".btn-eliminar", function () {
     }).then((result) => {
         if (result.isConfirmed) {
 
-            fetch(`/${controlador}/Eliminar?Id=${data.idDoctorHorario}`, {
+            fetch(`/${controlador}/Eliminar?Id=${data.idAsesorHorario}`, {
                 method: "DELETE",
                 headers: { 'Content-Type': 'application/json;charset=utf-8' }
             }).then(response => {
@@ -237,7 +237,7 @@ $("#tbData tbody").on("click", ".btn-eliminar", function () {
 
 $("#btnGuardar").on("click", function () {
 
-    if ($("#cboDoctor").val().trim() == "" ||
+    if ($("#cboAsesor").val().trim() == "" ||
         $("#txtHoraInicioAM").val().trim() == "" ||
         $("#txtHoraFinAM").val().trim() == "" ||
         $("#txtHoraInicioPM").val() == "" ||
@@ -256,17 +256,19 @@ $("#btnGuardar").on("click", function () {
     const HoraInicioPM = moment($("#txtHoraInicioPM").val(), ['h:mm A'])
     const HoraFinPM = moment($("#txtHoraFinPM").val(), ['h:mm A'])
 
+    //alert(HoraInicioAM);
+
     const objeto = {
-        IdDoctorHorario: idEditar,
-        Doctor: {
-            IdDoctor: $("#cboDoctor").val(),
+        idAsesorHorario: idEditar,
+        Asesor: {
+            idAsesor: $("#cboAsesor").val(),
         },
         NumeroMes: $("#cboMesAtencion").val(),
         HoraInicioAM: HoraInicioAM.format('HH:mm'),
         HoraFinAM: HoraFinAM.format('HH:mm'),
         HoraInicioPM: HoraInicioPM.format('HH:mm'),
         HoraFinPM: HoraFinPM.format('HH:mm'),
-        DoctorHorarioDetalle: {
+        AsesorHorarioDetalle: {
             Fecha: $('#txtFechaAtencion').val().replace(/\n/g, ',').trim()
         }
     }
@@ -300,3 +302,5 @@ $("#btnGuardar").on("click", function () {
         });
     })
 });
+
+

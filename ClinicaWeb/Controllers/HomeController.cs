@@ -1,11 +1,12 @@
-using ClinicaWeb.Models;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using CentroEmpWeb.Models;
 
-namespace ClinicaWeb.Controllers
+namespace CentroEmpWeb.Controllers
 {
     public class HomeController : Controller
     {

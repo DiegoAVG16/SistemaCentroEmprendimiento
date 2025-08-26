@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             { title: "Correo", "data": "correo" },
             { title: "Fecha Creacion", "data": "fechaCreacion" },
             {
-                title: "", "data": "idDoctor", width: "100px", render: function (data, type, row) {
+                title: "", "data": "idAsesor", width: "100px", render: function (data, type, row) {
                     return `<div class="btn-group dropstart">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             Acción
@@ -40,6 +40,40 @@ document.addEventListener("DOMContentLoaded", function (event) {
         },
     });
 
+});
+
+
+// Migración de hashes (solo Administrador)
+document.getElementById('btnMigrarHashes')?.addEventListener('click', function () {
+    Swal.fire({
+        text: "Esto migrará contraseñas a hash seguro. ¿Continuar?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, migrar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/Usuario/MigrarHashes`, { method: "POST" })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(j => {
+                    Swal.fire({
+                        title: "Listo",
+                        text: `Usuarios migrados: ${j.data}`,
+                        icon: "success"
+                    });
+                    tablaData.ajax.reload();
+                })
+                .catch(() => {
+                    Swal.fire({
+                        title: "Error",
+                        text: "No se pudo migrar.",
+                        icon: "error"
+                    });
+                });
+        }
+    });
 });
 
 

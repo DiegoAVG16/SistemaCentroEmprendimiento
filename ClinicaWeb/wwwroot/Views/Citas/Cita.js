@@ -3,7 +3,7 @@ let idEditar = 0;
 const controlador = "Citas";
 const modal = "mdData";
 const preguntaEliminar = "Desea cancelar su cita?";
-const confirmaEliminar = "Su cita fue cancela.";
+const confirmaEliminar = "Su cita fue cancelada.";
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 }
             },
             {
-                title: "Doctor", "data": "doctor", render: function (data, type, row) {
+                title: "Asesor", "data": "asesor", render: function (data, type, row) {
                     return `${data.nombres} ${data.apellidos}`
                 }
             },
