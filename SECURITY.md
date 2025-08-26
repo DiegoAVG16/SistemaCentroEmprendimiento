@@ -5,17 +5,18 @@
 - Implementado en `ClinicaData/Seguridad/SecurityUtils.cs` y aplicado en `UsuarioRepositorio` para `Guardar`, `Editar` y validación en `Login`.
 
 ### Copias de seguridad (disponibilidad)
-- Programar tarea diaria (Windows Task Scheduler) para exportar la base de datos SQL Server.
+- Scripts incluidos en `scripts/`:
+  - `scripts/Backup-Database.ps1`: realiza el respaldo y limpieza por retención.
+  - `scripts/Register-BackupTask.ps1`: registra la tarea en el Programador de tareas.
 
-Ejemplo PowerShell (ajusta nombre BD/servidor):
+Uso:
 ```powershell
-$date = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-$dest = "$PSScriptRoot\\backups"
-New-Item -ItemType Directory -Force -Path $dest | Out-Null
-sqlcmd -S .\\SQLEXPRESS -Q "BACKUP DATABASE [CentroEmp] TO DISK = '$dest\\CentroEmp_$date.bak' WITH INIT, STATS = 5"
+cd scripts
+./Backup-Database.ps1 -ServerInstance ".\SQLEXPRESS" -Database "CentroEmp" -OutputDir "C:\\Backups\\CentroEmp" -RetentionDays 7
+./Register-BackupTask.ps1 -TaskName "CentroEmpBackupDiario" -Schedule "02:00" -ServerInstance ".\SQLEXPRESS" -Database "CentroEmp" -OutputDir "C:\\Backups\\CentroEmp" -RetentionDays 7
 ```
 
-Retención sugerida: 7 diarios, 4 semanales, 3 mensuales. Verificar restauración semanal en ambiente de pruebas.
+Retención sugerida: 7 diarios, 4 semanales, 3 mensuales. Verificación de restauración semanal en ambiente de pruebas.
 
 ### Cifrado simétrico opcional (AES-256-GCM)
 - Para campos sensibles, se recomienda AES-256-GCM con claves en variables de entorno.
