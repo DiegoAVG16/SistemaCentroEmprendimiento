@@ -5,30 +5,46 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="description" content="Portal de gestión del Centro de Emprendimiento - Net8" />
+    <meta name="author" content="Centro Emprendimiento Net8" />
     <title>Centro Emprendimiento - Net8</title>
-    <link href="~/css/styles.css" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    
+    <!-- SB Admin CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin@7.0.7/css/sb-admin.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    
+    <!-- CSS personalizado -->
+    <link href="~/css/custom.css" rel="stylesheet" asp-append-version="true" />
+
+    <!-- Sección opcional de estilos por vista -->
     @RenderSection("Estilos", required: false)
-    <script src="~/lib/fontawesome/all.js"></script>
 </head>
 <body class="sb-nav-fixed">
+    <!-- Navbar superior -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        
         <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-        <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            @*  <div class="input-group">
-            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-            </div> *@
-        </form>
-        <!-- Navbar-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+                id="sidebarToggle"
+                type="button"
+                aria-label="Toggle sidebar"
+                aria-expanded="false">
+            <i class="fas fa-bars"></i>
+        </button>
+        <!-- Navbar usuario -->
         @await Component.InvokeAsync("MenuUsuario")
     </nav>
+
+    <!-- Layout principal -->
     <div id="layoutSidenav">
+        <!-- Sidebar -->
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
@@ -41,7 +57,8 @@
                             </a>
                         }
 
-                        <div class="sb-sidenav-menu-heading">Gestion</div>
+                        <div class="sb-sidenav-menu-heading">Gestión</div>
+
                         @if (User.IsInRole("Administrador"))
                         {
                             <a class="nav-link" asp-controller="Usuario" asp-action="Index">
@@ -60,8 +77,8 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Asesor Horario
                             </a>
-
                         }
+
                         @if (User.IsInRole("Emprendedor"))
                         {
                             <a class="nav-link" asp-controller="Citas" asp-action="Index">
@@ -78,36 +95,48 @@
                             </a>
                         }
 
-                        @if (User.IsInRole("asesor"))
+                        @if (User.IsInRole("Asesor"))
                         {
                             <a class="nav-link" asp-controller="Citas" asp-action="CitasAsignadas">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Citas Asignadas
+                            </a>
+                        }
+
+                        <div class="sb-sidenav-menu-heading">Seguridad</div>
+                        
+                        <a class="nav-link" asp-controller="EncryptionTest" asp-action="Index">
+                            <div class="sb-nav-link-icon"><i class="fas fa-shield-alt"></i></div>
+                            Pruebas de Cifrado
+                        </a>
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Citas
                             </a>
                         }
-
-
                     </div>
                 </div>
 
-                
-
-                <div class="sb-sidenav-footer">
-                    <img src="~/css/ciemi.jpeg" alt="Logo CIEMI" class="img-fluid" style="max-width: 200px;" />
-                    
+                <!-- Footer del sidebar -->
+                <div class="sb-sidenav-footer text-center">
+                    <img src="~/css/ciemi.jpeg" alt="Logo CIEMI"
+                         class="img-fluid" style="max-width: 200px;" loading="lazy" />
                 </div>
             </nav>
         </div>
+
+        <!-- Contenido principal -->
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
                     @RenderBody()
                 </div>
             </main>
+
+            <!-- Footer -->
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2025</div>
+                        <div class="text-muted">&copy; Centro Emprendimiento Net8 2025</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
@@ -118,11 +147,22 @@
             </footer>
         </div>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/scripts.js"></script>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin@7.0.7/js/sb-admin.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/scripts.js" asp-append-version="true" />
     <script src="~/lib/sweetalert2/js/sweetalert2.js"></script>
     <script src="~/lib/loadingoverlay/loadingoverlay.min.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Sección opcional de scripts por vista -->
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+

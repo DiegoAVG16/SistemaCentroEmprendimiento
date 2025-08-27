@@ -1,0 +1,301 @@
+@{
+    ViewData["Title"] = "Pruebas de Cifrado AES";
+}
+
+@section Estilos {
+    <link href="~/css/encryption-styles.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<div class="container mt-4 encryption-container">
+    <h1 class="text-center mb-4 encryption-main-title">Pruebas del Sistema de Cifrado</h1>
+    
+    <!-- Mensajes de éxito y error -->
+    @if (ViewBag.Success != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @ViewBag.Success
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Prueba de Cifrado AES -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 encryption-card">
+                <div class="card-header bg-primary text-white encryption-header">
+                    <h5 class="mb-0 fw-semibold">Prueba de Cifrado AES-256</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="@Url.Action("TestEncryption")" class="encryption-form">
+                        <div class="mb-3 encryption-input-group">
+                            <label for="plainText" class="form-label fw-medium">Texto a Cifrar:</label>
+                            <textarea class="form-control" id="plainText" name="plainText" rows="3" 
+                                    placeholder="Ingresa el texto que quieres cifrar..." required></textarea>
+                        </div>
+                        <div class="mb-3 encryption-input-group">
+                            <label for="password" class="form-label fw-medium">Contraseña de Cifrado:</label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Ingresa tu contraseña secreta" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-semibold encryption-btn">
+                            Probar Cifrado AES
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prueba de Hash -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 encryption-card">
+                <div class="card-header bg-success text-white encryption-header">
+                    <h5 class="mb-0 fw-semibold">Prueba de Hash SHA-256 + PBKDF2</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="@Url.Action("TestHash")" class="encryption-form">
+                        <div class="mb-3 encryption-input-group">
+                            <label for="hashPassword" class="form-label fw-medium">Contraseña para Hash:</label>
+                            <input type="password" class="form-control" id="hashPassword" name="password" 
+                                   placeholder="Ingresa la contraseña para hashear" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-semibold encryption-btn">
+                            Probar Hash
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generar Clave Maestra -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0 fw-semibold">Generar Clave Maestra del Sistema</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="@Url.Action("GenerateMasterKey")">
+                        <p class="text-muted fw-normal">
+                            Genera una nueva clave maestra para el sistema de cifrado. 
+                            Esta clave se usa para cifrar datos sensibles automáticamente.
+                        </p>
+                        <button type="submit" class="btn btn-warning fw-semibold">
+                            Generar Nueva Clave Maestra
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultados de Cifrado -->
+    @if (ViewBag.Results != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0 fw-semibold">Resultados de la Prueba de Cifrado</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold text-dark mb-3">Información Original:</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><strong class="fw-medium">Texto:</strong> <span class="text-muted">@ViewBag.Results.PlainText</span></li>
+                                    <li class="mb-2"><strong class="fw-medium">Contraseña:</strong> <span class="text-muted">@ViewBag.Results.Password</span></li>
+                                    <li class="mb-2"><strong class="fw-medium">Clave Maestra:</strong> <code class="bg-light px-2 py-1 rounded">@ViewBag.Results.MasterKey</code></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold text-dark mb-3">Verificaciones:</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><strong class="fw-medium">Cifrado con Contraseña:</strong> 
+                                        @if (ViewBag.Results.IsPasswordEncrypted) { <span class="badge bg-success fw-normal">Cifrado</span> } 
+                                        else { <span class="badge bg-danger fw-normal">No Cifrado</span> }
+                                    </li>
+                                    <li class="mb-2"><strong class="fw-medium">Cifrado con Clave Maestra:</strong> 
+                                        @if (ViewBag.Results.IsMasterKeyEncrypted) { <span class="badge bg-success fw-normal">Cifrado</span> } 
+                                        else { <span class="badge bg-danger fw-normal">No Cifrado</span> }
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold text-dark mb-3">Cifrado con Contraseña:</h6>
+                                <div class="mb-3">
+                                    <strong class="fw-medium">Texto Cifrado:</strong>
+                                    <div class="bg-light p-3 rounded border">
+                                        <code class="small text-break">@ViewBag.Results.EncryptedWithPassword</code>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong class="fw-medium">Descifrado:</strong>
+                                    <div class="bg-light p-3 rounded border">
+                                        <span class="text-muted">@ViewBag.Results.DecryptedWithPassword</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong class="fw-medium">Verificación:</strong>
+                                    @if (ViewBag.Results.PasswordDecryptionCorrect) 
+                                    { <span class="badge bg-success fw-normal ms-2">Correcto</span> } 
+                                    else { <span class="badge bg-danger fw-normal ms-2">Incorrecto</span> }
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold text-dark mb-3">Cifrado con Clave Maestra:</h6>
+                                <div class="mb-3">
+                                    <strong class="fw-medium">Texto Cifrado:</strong>
+                                    <div class="bg-light p-3 rounded border">
+                                        <code class="small text-break">@ViewBag.Results.EncryptedWithMasterKey</code>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong class="fw-medium">Descifrado:</strong>
+                                    <div class="bg-light p-3 rounded border">
+                                        <span class="text-muted">@ViewBag.Results.DecryptedWithMasterKey</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong class="fw-medium">Verificación:</strong>
+                                    @if (ViewBag.Results.MasterKeyDecryptionCorrect) 
+                                    { <span class="badge bg-success fw-normal ms-2">Correcto</span> } 
+                                    else { <span class="badge bg-danger fw-normal ms-2">Incorrecto</span> }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Resultados de Hash -->
+    @if (ViewBag.HashResults != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0 fw-semibold">Resultados de la Prueba de Hash</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold text-dark mb-3">Información Original:</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><strong class="fw-medium">Contraseña Original:</strong> <span class="text-muted">@ViewBag.HashResults.OriginalPassword</span></li>
+                                    <li class="mb-2"><strong class="fw-medium">¿Está Hasheado?</strong> 
+                                        @if (ViewBag.HashResults.IsHashed) { <span class="badge bg-success fw-normal ms-2">Sí</span> } 
+                                        else { <span class="badge bg-danger fw-normal ms-2">No</span> }
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-semibold text-dark mb-3">Verificaciones:</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><strong class="fw-medium">Verificación Correcta:</strong> 
+                                        @if (ViewBag.HashResults.VerificationResult) { <span class="badge bg-success fw-normal ms-2">Correcta</span> } 
+                                        else { <span class="badge bg-danger fw-normal ms-2">Incorrecta</span> }
+                                    </li>
+                                    <li class="mb-2"><strong class="fw-medium">Verificación Incorrecta:</strong> 
+                                        @if (ViewBag.HashResults.WrongPasswordVerification) { <span class="badge bg-warning fw-normal ms-2">Correcta (Inesperado)</span> } 
+                                        else { <span class="badge bg-success fw-normal ms-2">Incorrecta (Esperado)</span> }
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <h6 class="fw-semibold text-dark mb-3">Hash Generado:</h6>
+                        <div class="bg-light p-3 rounded border">
+                            <code class="small text-break">@ViewBag.HashResults.HashedPassword</code>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <small class="text-muted fw-normal">
+                                <strong class="fw-medium">Formato:</strong> pbkdf2_sha256$iteraciones$salt$hash$longitud
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Clave Maestra Generada -->
+    @if (ViewBag.GeneratedMasterKey != null)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0 fw-semibold">Clave Maestra Generada</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning border-0">
+                            <strong class="fw-semibold">IMPORTANTE:</strong> Guarda esta clave maestra en un lugar seguro. 
+                            Se usa para cifrar y descifrar datos sensibles del sistema.
+                        </div>
+                        <div class="bg-light p-3 rounded border">
+                            <code class="small text-break">@ViewBag.GeneratedMasterKey</code>
+                        </div>
+                        <div class="mt-3">
+                            <small class="text-muted fw-normal">
+                                <strong class="fw-medium">Uso:</strong> Esta clave se puede configurar en appsettings.json para el cifrado automático.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Instrucciones de Uso -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0 fw-semibold">Cómo Usar el Sistema de Cifrado</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="fw-semibold text-dark mb-3">Cifrado Manual con AES:</h6>
+                    <pre class="bg-light p-3 rounded border"><code class="text-dark">// Cifrar texto
+string textoCifrado = SecurityUtils.EncryptAES("Texto secreto", "MiClave123");
+
+// Descifrar texto
+string textoDescifrado = SecurityUtils.DecryptAES(textoCifrado, "MiClave123");</code></pre>
+
+                    <h6 class="fw-semibold text-dark mb-3 mt-4">Cifrado Automático de Datos Sensibles:</h6>
+                    <pre class="bg-light p-3 rounded border"><code class="text-dark">// Cifrar con clave maestra del sistema
+string emailCifrado = SecurityUtils.EncryptSensitiveData("usuario@empresa.com", masterKey);
+
+// Descifrar automáticamente
+string emailDescifrado = SecurityUtils.DecryptSensitiveData(emailCifrado, masterKey);</code></pre>
+
+                    <h6 class="fw-semibold text-dark mb-3 mt-4">Hash de Contraseñas:</h6>
+                    <pre class="bg-light p-3 rounded border"><code class="text-dark">// Generar hash (automático en el repositorio)
+string hash = SecurityUtils.HashPassword("MiContraseña123");
+
+// Verificar contraseña
+bool esCorrecta = SecurityUtils.VerifyPassword("MiContraseña123", hash);</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

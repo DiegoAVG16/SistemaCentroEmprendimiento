@@ -31,16 +31,24 @@ namespace CentroEmpWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(VMUsuarioLogin modelo)
         {
+            Console.WriteLine($"=== INTENTO DE LOGIN ===");
+            Console.WriteLine($"Documento: {modelo.DocumentoIdentidad}");
+            Console.WriteLine($"Contraseña: {modelo.Clave}");
+            
             if (modelo.DocumentoIdentidad == null || modelo.Clave == null)
             {
+                Console.WriteLine("ERROR: Documento o contraseña son null");
                 ViewData["Mensaje"] = "No se encontraron coincidencias";
                 return View();
             }
 
+            Console.WriteLine("Llamando al repositorio...");
             Usuario usuario_encontrado = await _repositorio.Login(modelo.DocumentoIdentidad, modelo.Clave);
+            Console.WriteLine($"Usuario encontrado: {(usuario_encontrado != null ? "SÍ" : "NO")}");
 
             if (usuario_encontrado == null)
             {
+                Console.WriteLine("ERROR: Usuario no encontrado en el repositorio");
                 ViewData["Mensaje"] = "No se encontraron coincidencias";
                 return View();
             }

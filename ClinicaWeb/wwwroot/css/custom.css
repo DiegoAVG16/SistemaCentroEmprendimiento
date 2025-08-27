@@ -1,0 +1,220 @@
+/* CSS Personalizado para Centro de Emprendimiento UNIANDES */
+
+/* Estilos específicos de la aplicación */
+.login-ciemi {
+    background-image: url('/css/ciemi.jpeg');
+}
+
+.ciemi-banner {
+    background-image: url('~/css/ciemi.jpeg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    height: 200px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Personalizaciones adicionales del tema */
+.sb-nav-fixed {
+    padding-top: 56px;
+}
+
+.sb-sidenav-dark {
+    background-color: #212529;
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
+    color: #fff;
+}
+
+/* Estilos para tablas de datos */
+.datatable-wrapper {
+    margin: 20px 0;
+}
+
+.datatable-top,
+.datatable-bottom {
+    padding: 8px 0;
+}
+
+.datatable-selector {
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Botones personalizados */
+.btn-primary {
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+/* Estilos para formularios */
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Estilos para alertas */
+.alert {
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilos para cards */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Estilos para navegación */
+.navbar-dark {
+    background-color: #212529 !important;
+}
+
+.navbar-dark .navbar-brand {
+    color: #fff;
+}
+
+/* Estilos para sidebar */
+.sb-sidenav {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sb-sidenav-footer {
+    padding: 1rem;
+    background-color: #343a40;
+}
+
+/* Estilos para contenido principal */
+#layoutSidenav_content {
+    min-height: calc(100vh - 56px);
+}
+
+/* Estilos para footer */
+footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Estilos para botones de acción */
+.btn-action {
+    margin: 0 2px;
+}
+
+.btn-action.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Estilos para modales */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Estilos para tooltips */
+.tooltip {
+    font-size: 0.875rem;
+}
+
+/* Estilos para popovers */
+.popover {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para paginación */
+.pagination .page-link {
+    color: #0d6efd;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Estilos para badges */
+.badge {
+    font-size: 0.75em;
+    padding: 0.35em 0.65em;
+}
+
+/* Estilos para spinners */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Estilos para loading */
+.loading-overlay {
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+}
+
+/* Estilos para responsive */
+@media (max-width: 768px) {
+    .sb-sidenav {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 56px);
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .sb-sidenav.show {
+        transform: translateX(0);
+    }
+    
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Estilos para impresión */
+@media print {
+    .sb-sidenav,
+    .sb-topnav,
+    footer {
+        display: none !important;
+    }
+    
+    #layoutSidenav_content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+}
